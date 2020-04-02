@@ -1,0 +1,30 @@
+from airflow import DAG
+from airflow.operators.bash_operator import BashOperator
+from datetime import datetime, timedelta
+
+args = {
+        'start_date': datetime(2020,1,1),
+        'owner' : 'airflow-demo'
+        }
+		
+dag = DAG(
+
+			dag_id = 'sample dag 1'
+			default_args= args
+			schedule_interval = '*/2 * * * *'
+		 )
+		 
+sample_task = BashOperator(
+
+				task_id = 'sample task 1'
+				dag = dag,
+				bash_command = 'echo Running a sample task'
+				)
+				
+print_date = BashOperator(
+				task_id = 'sample_task_2',
+				dag = dag,
+				bash_command = 'date'
+				)
+				
+print_date>>sample_task
